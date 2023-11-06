@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 
 type FormData = {
@@ -11,8 +11,9 @@ type FormData = {
 }
 
 const CreateAccount: NextPage = () => {
-    const { control, handleSubmit, formState: { errors } } = useForm();
+    const { control, handleSubmit, reset, formState: { errors } } = useForm();
     const [step, setStep] = useState(1);
+    const [value, setValue] = useState('');
 
     const router = useRouter();
 
@@ -34,13 +35,17 @@ const CreateAccount: NextPage = () => {
     // }
 
     const onSubmit = (data: any) => {
+        
         if (step < 3) {
           setStep(step + 1);
         } else {
           // 여기에서 회원가입 처리를 수행할 수 있습니다.
           console.log(data);
         }
+
+        
       };
+
 
   return (
     <>
@@ -52,8 +57,8 @@ const CreateAccount: NextPage = () => {
            <main>
             <div className='text-lg pl-4 pt-4 pb-2 font-bold'>{step === 1 ? '닉네임 입력' : step === 2 ? '이메일 입력' : '비밀번호 입력'}</div>
             <div className='text-xs pl-4'>{step === 1 ? '닉네임을 추가하세요.' : step === 2 ? '이메일을 추가하세요.' : '비밀번호는 다음 규칙을 따라야합니다.'}</div>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className={`form-step-${step} w-full p-4`}>
+            <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col justify-center p-4'>
+                <div className={`form-step-${step} w-full `}>
                     <Controller
                     name={steps[step - 1]}
                     control={control}
@@ -62,15 +67,15 @@ const CreateAccount: NextPage = () => {
                     render={({ field }) => (
                         <input
                         {...field}
-                        type={step === 3 ? 'password' : 'text'}
+                        type={step === 3 ? 'password' : step === 2 ? 'email' : 'text'}
                         placeholder={step === 1 ? '닉네임' : step === 2 ? '이메일' : '비밀번호'}
                         className='w-full h-10 rounded-xl border border-gray-200 pl-4'
                         />
                     )}
                     />
-                    {errors[steps[step - 1]] && <p className='font-bold text-red-600 text-sm pt-2'>{errors[steps[step - 1]].message}</p>}
+                    {errors[steps[step - 1]] && <p className='font-bold text-red-600 text-sm pt-2 mb-4'>{errors[steps[step - 1]].message}</p>}
                 </div>
-                <button type="submit" className='p-4 h-10 w-full rounded-2xl text-white bg-blue-600 flex justify-center items-center'>{step < 3 ? '다음으로' : '회원가입'}</button>
+                <button type="submit" className=' h-10 w-full rounded-2xl text-white bg-blue-600 flex justify-center items-center mt-4'>{step < 3 ? '다음으로' : '회원가입'}</button>
             </form>
            </main>
         </div>

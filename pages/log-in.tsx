@@ -60,7 +60,11 @@ const Login: NextPage = () => {
                 </form>
             </main>
             <footer className='w-full h-1/5 flex justify-center items-end'>
-                <button type="submit" className="mt-4 rounded-3xl w-5/6 h-10 rounded-2xl text-blue-600 border border-blue-600">새 계정 만들기</button>
+                <div className='mt-4 rounded-3xl w-5/6 h-10 rounded-2xl text-blue-600 border border-blue-600 flex justify-center items-center'>
+                <Link href={'/create-account'} className="w-full h-full">
+                    새 계정 만들기
+                </Link>
+                </div>
             </footer>
         </div>
       </section>
