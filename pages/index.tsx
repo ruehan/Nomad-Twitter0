@@ -1,5 +1,9 @@
 import type { NextPage } from 'next';
-import {AiOutlineHeart as HeartIcon, AiOutlineMessage as MessageIcon} from 'react-icons/ai'
+import {AiOutlineHeart as HeartIcon, AiOutlineMessage as MessageIcon,
+  AiOutlineHome as HomeIcon} from 'react-icons/ai'
+
+import {MdOutlineAddCircleOutline as AddIcon} from 'react-icons/md' 
+import {CgProfile as ProfileIcon} from 'react-icons/cg'
 
 const Home: NextPage = () => {
 
@@ -15,10 +19,10 @@ const Home: NextPage = () => {
   return (
     <>
       <section className='flex justify-center'>
-      <div className='border-2 border-black h-screen max-w-md'>
+      <div className='border-2 border-black h-screen max-w-md relative'>
         <header className='flex justify-between items-center w-full h-12 text-2xl font-bold p-4'>
           <div className='font-dancing'>Hangram</div>
-          <div>
+          <div> 
             <HeartIcon />
           </div>
         </header>
@@ -68,6 +72,11 @@ const Home: NextPage = () => {
             </div>
           </div>
         </main>
+        <footer className='flex justify-between items-center w-full h-12 text-2xl font-bold p-4 absolute left-0 bottom-0 border-t border-gray-200'>
+          <HomeIcon />
+          <AddIcon />
+          <ProfileIcon />
+        </footer>
       </div>
       </section>
     </>
