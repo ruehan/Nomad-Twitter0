@@ -3,6 +3,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { SetStateAction, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import {motion} from 'framer-motion'
+
+import {IoChevronBackOutline as BackIcon} from 'react-icons/io5'
 
 type FormData = {
     nickname: string;
@@ -34,25 +37,54 @@ const CreateAccount: NextPage = () => {
     //     router.push("/")
     // }
 
-    const onSubmit = (data: any) => {
+    const onSubmit = async (data: FormData) => {
         
         if (step < 3) {
           setStep(step + 1);
         } else {
-          // 여기에서 회원가입 처리를 수행할 수 있습니다.
           console.log(data);
-        }
+          const response = await fetch('/api/create-account', {
+            method: 'POST',
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+          })
+          const result = await response.json()
+          console.log(result)
 
-        
+          router.push('/log-in')
+        }
       };
+
+    const pageEffect = {
+      initial: {
+        x:500
+      },
+      in: {
+        x: 0
+      },
+      out: {
+        opacity: 0
+      }
+    }
+
 
 
   return (
     <>
       <section className='flex justify-center'>
-        <div className='border-2 border-black h-screen max-w-md w-full relative'>
-           <header className='h-10 bg-gray-200 flex items-center justify-start p-4'>
-                back
+        <div className=' h-screen max-w-md w-full relative pt-4 overflow-hidden'>
+           <motion.div
+              initial="initial"
+              animate="in"
+              exit="out"
+              transition={{duration: 0.5}}
+              variants={pageEffect}>
+           <header className='h-10 flex items-center justify-start p-4'>
+                <Link href={'/log-in'}>
+                  <BackIcon className="text-2xl"/>
+                </Link>
            </header>
            <main>
             <div className='text-lg pl-4 pt-4 pb-2 font-bold'>{step === 1 ? '닉네임 입력' : step === 2 ? '이메일 입력' : '비밀번호 입력'}</div>
@@ -78,6 +110,7 @@ const CreateAccount: NextPage = () => {
                 <button type="submit" className=' h-10 w-full rounded-2xl text-white bg-blue-600 flex justify-center items-center mt-4'>{step < 3 ? '다음으로' : '회원가입'}</button>
             </form>
            </main>
+           </motion.div>
         </div>
       </section>
     </>
