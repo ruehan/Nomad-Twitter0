@@ -4,8 +4,27 @@ import {AiOutlineHeart as HeartIcon, AiOutlineMessage as MessageIcon,
 
 import {MdOutlineAddCircleOutline as AddIcon} from 'react-icons/md' 
 import {CgProfile as ProfileIcon} from 'react-icons/cg'
+import useSWR from 'swr';
+import { useRouter } from 'next/router';
+
+interface LoginInfo {
+  loggedIn: boolean;
+  user?: any;
+}
+
+const fetcher = async (url: string): Promise<LoginInfo> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error('An error occurred while fetching the data.');
+  }
+  return res.json();
+};
 
 const Home: NextPage = () => {
+
+  const {data, error} = useSWR<LoginInfo>('/api/user-data', fetcher)
+
+  const router = useRouter();
 
   const word = `
     123
@@ -16,10 +35,16 @@ const Home: NextPage = () => {
     ghi
   `
 
+  if (!data) return <div>Loading...</div>;
+
+  if(data.loggedIn !== true){
+    router.push('/log-in')
+  }
+
   return (
     <>
       <section className='flex justify-center'>
-      <div className='border-2 border-black h-screen max-w-md relative'>
+      <div className='border border-black h-screen max-w-md relative'>
         <header className='flex justify-between items-center w-full h-12 text-2xl font-bold p-4'>
           <div className='font-dancing'>Hangram</div>
           <div> 
