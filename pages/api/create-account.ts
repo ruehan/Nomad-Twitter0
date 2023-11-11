@@ -12,13 +12,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse){
                 data: {
                     nickname: nickname,
                     email: email,
-                    password: password
+                    password: password,
+                    profile: ''
                 }
             })
 
             return res.status(200).json(user)
         } catch(error){
-            return res.status(400).json({message: 'Something went wrong.'})
+            return res.status(400).json({message: error})
         }
     } else {
         return res.status(405).end()
