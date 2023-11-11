@@ -8,6 +8,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import Nav from './components/nav';
 
 interface LoginInfo {
   loggedIn: boolean;
@@ -15,6 +16,10 @@ interface LoginInfo {
 }
 interface TweetInfo {
   tweets: any;
+}
+
+interface ProfileInfo {
+  profile: any;
 }
 
 const fetcher = async (url: string): Promise<LoginInfo> => {
@@ -33,10 +38,20 @@ const tweet_fetcher = async (url: string): Promise<TweetInfo> => {
   return res.json();
 };
 
+const profile_fetcher = async (url: string): Promise<ProfileInfo> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error('An error occurred while fetching the data.');
+  }
+  return res.json();
+};
+
 const Home: NextPage = () => {
 
   const {data, error} = useSWR<LoginInfo>('/api/user-data', fetcher)
   const { data :tweets, error : tweetsError } = useSWR<TweetInfo>('/api/get-tweet', tweet_fetcher);
+  const {data: profiles, error: profilesError} = useSWR<ProfileInfo>('/api/profile-data', profile_fetcher)
+
   const [image, setImage] = useState<string[]>([])
 
 // useEffect(() => {
@@ -78,8 +93,9 @@ useEffect(() => {
 
   if (!data) return <div>Loading...</div>;
   if (!tweets) return <div>Loading...</div>
+  if (!profiles) return <div>Loading...</div>;
 
-  console.log(tweets)
+  console.log(profiles)
 
   if(data.loggedIn !== true){
     router.push('/log-in')
@@ -126,10 +142,15 @@ useEffect(() => {
 
         <main>
           <div className='card'>
-            {tweets.tweets.map((tweet: any) => (
+            {tweets.tweets.map((tweet: any, index: any) => (
+
               <div className='w-full overflow-hidden'>
               <div className="header h-12 border-b-2 border-gray-200 flex items-center p-4">
-                <div className="img h-8 w-8 rounded-full border-2 border-black"></div>
+                <div className="img h-8 w-8 rounded-full border border-black">
+                  {(index >= 0 && index < profiles.profile.length) && tweet.email === profiles.profile[index].email ? (
+                    <img key={tweet.id} src={profiles.profile[index].profile.replace('public', '')} className="h-8 w-8 rounded-full" />
+                  ) : null}
+                </div>
                 <div className="nickname text-sm ml-4 font-bold">{tweet.nickname}</div>
               </div>
               <div className='flex w-full overflow-scroll scrollbar-hide'>
@@ -159,11 +180,7 @@ useEffect(() => {
             
           </div>
         </main>
-        <footer className='sticky bg-white bottom-0 left-0 flex justify-between items-center w-full h-12 text-2xl font-bold p-4 absolute left-0 bottom-0 border-t border-gray-200 z-10'>
-          <HomeIcon />
-          <Link href='/create-tweet'><AddIcon /></Link>
-          <ProfileIcon />
-        </footer>
+        <Nav />
       </div>
       </section>
     </>
