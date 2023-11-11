@@ -55,23 +55,49 @@ const CreateTweet: NextPage = () => {
   }
 
 
-  const onSubmit = async (data: FormData) => {
-    const formData = new FormData();
-    formData.append('content', data.content);
+//   const onSubmit = async (data: FormData) => {
+//     const formData = new FormData();
+//     formData.append('content', data.content);
 
-    // console.log(data.images)
+//     // console.log(data.images)
 
-    Array.from(data.images).forEach((file) => {
-      formData.append('images', file);
-    })
+//     Array.from(data.images).forEach((file) => {
+//       formData.append('images', file);
+//     })
 
     
 
+//     const response = await fetch('/api/create-tweet', {
+//       method: 'POST',
+//       body: formData
+//     })
+
+//     const result = await response.json();
+//     if(response.ok){
+//       alert('Upload Success');
+//       router.push('/')
+//     }else{
+//       alert('Upload Fail');
+//     }
+//   }
+
+  const onSubmit = async (formData: FormData) => {
+    const uploadFormData = new FormData();
+    uploadFormData.append('content', formData.content);
+
+    // 여기서 formData.images 대신 images를 사용합니다.
+    if (images && images.length) {
+      Array.from(images).forEach((file) => {
+        uploadFormData.append('images', file);
+      });
+    }
+
     const response = await fetch('/api/create-tweet', {
       method: 'POST',
-      body: formData
-    })
-
+      body: uploadFormData,
+      // 'Content-Type': 'multipart/form-data' 헤더는 설정하지 않습니다.
+      // 브라우저가 자동으로 설정하도록 합니다.
+    });
     const result = await response.json();
     if(response.ok){
       alert('Upload Success');
@@ -79,28 +105,53 @@ const CreateTweet: NextPage = () => {
     }else{
       alert('Upload Fail');
     }
-  }
+  };
 
-  const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+//     if (event.target.files) {
+//         const files = event.target.files;
+//         const newImagePreviewUrls: SetStateAction<string[]> = [];
+//         for (let i = 0; i < files.length; i++) {
+//             const reader = new FileReader();
+//             reader.onload = (e: ProgressEvent<FileReader>) => {
+//                 // e.target.result에는 이미지의 base64 인코딩된 URL이 포함되어 있습니다.
+//                 if (e.target?.result) {
+//                     newImagePreviewUrls.push(e.target.result as string);
+//                     // 모든 이미지가 로드되었는지 확인한 후 상태를 업데이트합니다.
+//                     if (newImagePreviewUrls.length === files.length) {
+//                         setImagePreviewUrls(newImagePreviewUrls);
+//                     }
+//                 }
+//             };
+//             reader.readAsDataURL(files[i]);
+//         }
+//     }
+// };
+
+const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-        const files = event.target.files;
-        const newImagePreviewUrls: SetStateAction<string[]> = [];
-        for (let i = 0; i < files.length; i++) {
-            const reader = new FileReader();
-            reader.onload = (e: ProgressEvent<FileReader>) => {
-                // e.target.result에는 이미지의 base64 인코딩된 URL이 포함되어 있습니다.
-                if (e.target?.result) {
-                    newImagePreviewUrls.push(e.target.result as string);
-                    // 모든 이미지가 로드되었는지 확인한 후 상태를 업데이트합니다.
-                    if (newImagePreviewUrls.length === files.length) {
-                        setImagePreviewUrls(newImagePreviewUrls);
-                    }
-                }
-            };
-            reader.readAsDataURL(files[i]);
-        }
+      const fileList = event.target.files;
+      const fileArray = Array.from(fileList);
+      const newImagePreviewUrls: string[] = [];
+
+      fileArray.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e: ProgressEvent<FileReader>) => {
+          if (e.target?.result) {
+            newImagePreviewUrls[index] = e.target.result as string;
+            if (newImagePreviewUrls.length === fileArray.length) {
+              // 모든 이미지가 로드되었을 때만 상태를 업데이트합니다.
+              setImagePreviewUrls(newImagePreviewUrls);
+              // react-hook-form에 이미지 파일을 설정합니다.
+              setValue('images', fileList);
+            }
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
-};
+  };
+
 
 
   return (
