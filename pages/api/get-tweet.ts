@@ -18,7 +18,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         },
       });
 
-      return res.status(200).json({ albums: albums });
+      const counts = await prisma.tweet.count({
+        where: {
+          email: email
+        }
+      })
+
+      const result = {
+        tweets: tweets,
+        count: counts
+      };
+
+      return res.status(200).json({ tweets: result });
     } catch(e){
       const tweets = await prisma.tweet.findMany({
         orderBy: {
