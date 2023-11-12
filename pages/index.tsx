@@ -58,7 +58,7 @@ const Home: NextPage = () => {
   const [nicknames, setNicknames] = useState([]);
 
 useEffect(() => {
-  if (tweets) {
+  if (tweets && Object.keys(tweets.message).length !== 0) {
     const newImages = tweets.result.tweets.flatMap((tweet: any) => 
       tweet.images ? tweet.images.split(',') : []
     );
@@ -111,14 +111,13 @@ useEffect(() => {
 
   if (!data) return <div>Loading...</div>;
 
-  console.log(data)
-
   if(data.loggedIn !== true){
     router.push('/log-in')
   }
 
   if (!tweets) return <div>Loading...</div>
   if (!profiles) return <div>Loading...</div>;
+  if(Object.keys(tweets.message).length === 0) return <div>Loading...</div>
   
 
 
