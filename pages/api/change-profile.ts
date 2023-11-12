@@ -35,8 +35,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({error: err.message})
       }
 
-      console.log(req.files)
-
       const imagePaths = (req.files as Express.Multer.File[]).map((file) => file.path)
 
 
@@ -44,8 +42,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       const user = req.session.get('user')
       const nickname = user.nickname
       const email = user.email
-
-      console.log(imagePaths)
 
       const updatedProfile = await prisma.user.update({
         where: { 

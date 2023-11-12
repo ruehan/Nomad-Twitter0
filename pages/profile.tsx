@@ -16,6 +16,8 @@ interface ProfileInfo {
   profile: any;
 }
 interface TweetInfo {
+  result: any;
+  count: any;
   tweets: any;
 }
 
@@ -52,7 +54,7 @@ const Profile: NextPage = () => {
 
   useEffect(() => {
     if (tweets) {
-        const newImages = tweets.tweets.tweets.flatMap((tweet: any) => {
+        const newImages = tweets.result.tweets.flatMap((tweet: any) => {
           if (tweet.images) {
             const parts = tweet.images.split(','); // 이미지 URL 문자열을 쉼표로 분리
             if (parts.length > 0) {
@@ -69,7 +71,6 @@ const Profile: NextPage = () => {
   if (!data) return <div>Loading...</div>;
   if (!tweets) return <div>Loading...</div>
 
-  console.log(tweets)
 
   const pageEffect = {
     initial: {
@@ -117,14 +118,16 @@ const Profile: NextPage = () => {
         <section className='flex justify-center'>
             <div className='h-screen max-w-md w-full overflow-scroll border border-gray-100 relative'>
                 {modal && (
-                    <div className="modal w-full h-96 bg-gray-100 absolute top-48 z-20 ">
-                        <header className='h-10 w-full flex justify-start'>
-                            <div className="" onClick={openModal}>취소</div>
+                    <div className="modal w-full h-96 bg-white absolute top-48 z-20 border border-gray-100 ">
+                        <header className='h-10 pl-4 w-full flex justify-between items-center border-b border-gray-100'>
+                            <div className="w-24" onClick={openModal}>취소</div>
+                            <div className="w-24 font-bold">프로필 편집</div>
+                            <div className="w-24"></div>
                         </header>
-                        <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col'>
-                            <input {...register('images')} type="file" accept="image/*" className="w-4/6 border-2 rounded-xl border-gray-200 m-4" /> 
+                        <form onSubmit={handleSubmit(onSubmit)} className='w-full flex flex-col justify-center pl-6'>
+                            <input {...register('images')} type="file" accept="image/*" className="w-5/6 border-2 rounded-xl border-gray-200 m-4" /> 
                         
-                            <button type="submit" className="w-5/6 border-2 rounded-xl border-gray-200 h-12 m-4">Upload</button>
+                            <button type="submit" className="w-5/6 rounded-2xl text-white bg-blue-600 h-10 m-4">사진 업로드</button>
                         </form>
                     </div>
                 )}
@@ -146,15 +149,19 @@ const Profile: NextPage = () => {
 
                     )}
                     <div className='w-12 h-12  flex flex-col justify-center items-center'>
-                        <div className='text-sm font-bold'>{tweets.tweets.count}</div>
+                        {tweets.result.count ? (
+                          <div className='text-sm font-bold'>{tweets.result.count}</div>
+                        ) : (
+                          <div className='text-sm font-bold'>0</div>
+                        )}
                         <div className='text-xs'>게시물</div>
                     </div>
                     <div className='w-12 h-12  flex flex-col justify-center items-center'>
-                        <div className='text-sm font-bold'>1</div>
+                        <div className='text-sm font-bold'>0</div>
                         <div className='text-xs'>팔로워</div>
                     </div>
                     <div className='w-12 h-12  flex flex-col justify-center items-center'>
-                        <div className='text-sm font-bold'>1</div>
+                        <div className='text-sm font-bold'>0</div>
                         <div className='text-xs'>팔로잉</div>
                     </div>
                 </div>
@@ -163,12 +170,14 @@ const Profile: NextPage = () => {
                     <button className='bg-gray-200 rounded-xl w-48 h-8'>프로필 공유</button>
                 </div>
                 <div className="grid grid-cols-3 gap-1 mt-12">
-                    {tweets.tweets.tweets.map((tweet: any) => (
+                    {tweets.result.tweets.map((tweet: any) => (
                         image.map((img: string) => (
                             tweet.images.includes(img) && tweet.nickname === data.profile[0].nickname? (
-                                <div className="border border-gray-100 h-48">
+                                <Link href={`/tweet/${tweet.id}`}>
+                                  <div className="border border-gray-100 h-48">
                                     <img key={tweet.id} src={img.replace('public', '')} className="w-full h-48" />
-                                </div>
+                                  </div>
+                                </Link>
                             ) : null
                             )
                             )            

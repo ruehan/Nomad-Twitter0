@@ -9,3 +9,33 @@ datasource db {
   provider = "sqlite"
   url      = "file:./dev.db"
 }
+
+model User {
+  id Int @id @default(autoincrement())
+  nickname String @unique
+  email String @unique
+  password String
+  profile String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tweet {
+  id Int @id @default(autoincrement())
+  nickname String
+  email String
+  content String
+  images String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  tweetId   Int
+  authorNickname  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isLiked   Boolean  @default(false)
+  name      String
+}

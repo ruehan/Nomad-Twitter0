@@ -35,19 +35,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(400).json({error: err.message})
       }
 
-      console.log(req.files)
 
       const { content } = req.body;
       const imagePaths = (req.files as Express.Multer.File[]).map((file) => file.path)
 
-      console.log(content)
 
       // const coords = req.session.get("coords");
       const user = req.session.get('user')
       const nickname = user.nickname
       const email = user.email
-
-      console.log(imagePaths)
 
         const tweet = await prisma.tweet.create({
           data: {

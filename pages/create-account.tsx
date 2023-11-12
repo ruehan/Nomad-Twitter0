@@ -22,27 +22,11 @@ const CreateAccount: NextPage = () => {
 
     const steps = ['nickname', 'email', 'password'];
 
-    // const onSubmit = async (data: FormData) => {
-    //     const response = await fetch('/api/log-in', {
-    //         method: 'POST',
-    //         headers: {
-    //             "Content-Type": "application/json"
-    //         },
-    //         body: JSON.stringify(data)
-    //     })
-
-    //     const result = await response.json()
-    //     console.log(result)
-
-    //     router.push("/")
-    // }
-
     const onSubmit = async (data: FormData) => {
         
         if (step < 3) {
           setStep(step + 1);
         } else {
-          console.log(data);
           const response = await fetch('/api/create-account', {
             method: 'POST',
             headers: {
@@ -51,7 +35,6 @@ const CreateAccount: NextPage = () => {
             body: JSON.stringify(data)
           })
           const result = await response.json()
-          console.log(result)
 
           router.push('/log-in')
         }

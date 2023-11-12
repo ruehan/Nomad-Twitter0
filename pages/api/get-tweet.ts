@@ -9,36 +9,92 @@ const prisma = new PrismaClient();
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     // 로그인 처리
 
-    try{
-      const email = req.session.get("user").email;
+    const sessionUser = req.session.get('user');
+    const email = sessionUser.email
 
-      const tweets = await prisma.tweet.findMany({
-        orderBy: {
-          createdAt: 'desc'
-        },
-      });
+    const tweets = (await prisma.tweet.findMany()).reverse();
+    const userData = await prisma.user.findMany()
+    const usernameData = []
 
-      const counts = await prisma.tweet.count({
-        where: {
-          email: email
+    userData.map((user) => {
+      usernameData.push(user.nickname)
+    })
+
+    tweets.map(async (tweet) => {
+      try {
+        const dt = await prisma.like.findMany({
+          where: { 
+            name : sessionUser.nickname,
+            tweetId : tweet.id,         
+          },
+        })
+  
+        if(dt.length === 0){
+          await prisma.like.create({
+            data: {
+                tweetId : tweet.id,
+                authorNickname : tweet.nickname,
+                name : sessionUser.nickname,
+                isLiked : false
+            },
+          })
         }
-      })
+      } catch (error) {
+        console.log(error)
+      }
+    })
 
-      const result = {
-        tweets: tweets,
-        count: counts
-      };
+    const likes = (await prisma.like.findMany(
+      {
+        where: { name : sessionUser.nickname },
+      }
+    ))
 
-      return res.status(200).json({ tweets: result });
-    } catch(e){
-      const tweets = await prisma.tweet.findMany({
-        orderBy: {
-          createdAt: 'desc'
-        },
-      });
+    const likesData = (await prisma.like.findMany())
 
-      return res.status(200).json({ tweets: tweets });
+    let i = 0
+
+    let likedUser = []
+
+    likes.map((like) => {
+      for(i = 0; i < tweets.length; i++){
+        if(like.tweetId === tweets[i].id){
+          tweets[i]['isLiked'] = like.isLiked
+        }
+      }
     }
+    )
+
+    const counts = await prisma.tweet.count({
+          where: {
+            email: email
+          }
+        })
+
+    let object = {}
+
+    let data: any[] = []
+
+    tweets.map((tweet) => {
+      for(i = 0; i < likesData.length; i++){
+        if(tweet.id === likesData[i].tweetId){
+          if(likesData[i].isLiked === true){
+            data.push(likesData[i].name)
+          }
+        }
+      }
+      tweet['likedUser'] = data
+      data = []
+    }
+    )
+
+    const result = {
+          tweets: tweets,
+          count: counts
+    };
+
+    res.status(200).json({ message: "find tweets", result });
+
 
 }
 

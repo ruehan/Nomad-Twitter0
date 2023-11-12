@@ -37,11 +37,13 @@ const Nav: NextPage = () => {
 
   return (
     <>
-        <footer className='sticky bg-white bottom-0 left-0 flex justify-between items-center w-full h-12 text-2xl font-bold p-4 absolute left-0 bottom-0 border-t border-gray-200 z-10'>
-          <Link href='/'><HomeIcon /></Link>
-          <Link href='/create-tweet'><AddIcon /></Link>
-          <Link href='/profile'><ProfileIcon /></Link>
-        </footer>
+        <div className="absolute w-full h-12 bottom-0 left-0">
+          <footer className='sticky bg-white top-0 left-0 flex justify-between items-center w-full h-12 text-2xl font-bold p-4 absolute left-0 bottom-0 border-t border-gray-200 z-10'>
+            <Link href='/'><HomeIcon /></Link>
+            <Link href='/create-tweet'><AddIcon /></Link>
+            <Link href='/profile'><ProfileIcon /></Link>
+          </footer>
+        </div>
     </>
   )
 }

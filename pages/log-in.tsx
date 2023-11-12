@@ -25,7 +25,6 @@ const Login: NextPage = () => {
         })
 
         const result = await response.json()
-        console.log(result)
 
         router.push("/")
     }
@@ -41,8 +40,6 @@ const Login: NextPage = () => {
           opacity: 0
         }
       }
-
-      
 
   return (
     <>
