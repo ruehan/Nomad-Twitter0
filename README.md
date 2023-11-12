@@ -1,42 +1,12 @@
-# Hello World example
+[Nomad-Twitter 링크](http://ruehan.com:3001, "nomad-twitter")
 
-## How to use
-
-### Using `create-next-app`
-
-Execute [`create-next-app`](https://github.com/segmentio/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
-
-```bash
-npx create-next-app --example hello-world hello-world-app
-# or
-yarn create next-app --example hello-world hello-world-app
-```
-
-### Download manually
-
-Download the example:
-
-```bash
-curl https://codeload.github.com/zeit/next.js/tar.gz/canary | tar -xz --strip=2 next.js-canary/examples/hello-world
-cd hello-world
-```
-
-Install it and run:
-
-```bash
-npm install
-npm run dev
-# or
-yarn
-yarn dev
-```
-
-Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
-
-```bash
-now
-```
-
-## The idea behind the example
-
-This example shows the most basic idea behind Next. We have 2 pages: `pages/index.js` and `pages/about.js`. The former responds to `/` requests and the latter to `/about`. Using `next/link` you can add hyperlinks between them with universal routing capabilities. The `day` directory shows that you can have subdirectories.
+### 챌린지 이후 수정해야 할 것들
+- [ ] 회원가입 / 로그인 API 수정
+- [ ] 이미지 저장 local -> cloud storage
+- [ ] 페이지 디자인 수정
+- [ ] 데이터베이스 구조 변경
+- [ ] 자신의 게시물에 좋아요 반영시 알림 설정
+- [ ] 24시간 이내의 게시물을 상단에 띄워주기
+- [ ] 게시글에서 프로필 사진 적용시키기
+- [ ] 각종 API로 인한 버그 수정
+- [ ] 코드 리팩토링
