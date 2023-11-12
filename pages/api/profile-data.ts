@@ -9,7 +9,8 @@ const prisma = new PrismaClient();
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     // 로그인 처리
 
-      const email = req.session.get("user").email;
+      try{
+        const email = req.session.get("user").email;
 
       const profile = await prisma.user.findMany({
         where: {
@@ -17,7 +18,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
       });
 
-      return res.status(200).json({ profile: profile });
+        return res.status(200).json({ profile: profile });
+      }catch(error){
+        return res.status(400).json({message: error})
+      }
     } 
 
 export default withIronSession(handler, {

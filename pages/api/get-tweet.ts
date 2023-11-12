@@ -9,10 +9,11 @@ const prisma = new PrismaClient();
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     // 로그인 처리
 
-    const sessionUser = req.session.get('user');
-    const email = sessionUser.email
+    try{
+      const sessionUser = req.session.get('user');
+      const email = sessionUser.email
 
-    const tweets = (await prisma.tweet.findMany()).reverse();
+      const tweets = (await prisma.tweet.findMany()).reverse();
     const userData = await prisma.user.findMany()
     const usernameData = []
 
@@ -21,7 +22,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     })
 
     tweets.map(async (tweet) => {
-      try {
         const dt = await prisma.like.findMany({
           where: { 
             name : sessionUser.nickname,
@@ -39,9 +39,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
             },
           })
         }
-      } catch (error) {
-        console.log(error)
-      }
     })
 
     const likes = (await prisma.like.findMany(
@@ -92,9 +89,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
           tweets: tweets,
           count: counts
     };
-
+    
     res.status(200).json({ message: "find tweets", result });
 
+    }catch(error){
+      return res.status(400).json({message: error})
+    }
+
+    
+
+   
 
 }
 

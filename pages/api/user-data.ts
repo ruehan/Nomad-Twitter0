@@ -9,19 +9,20 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const user = req.session.get("user");
 
 
-  const profile = await prisma.user.findUnique({
-    where: { 
-      email: user.email
-     }
-  });
-
-
+  try{
+    const profile = await prisma.user.findUnique({
+      where: { 
+        email: user.email
+       }
+    });
   
-
-  if (user) {
-    res.status(200).json({ loggedIn: true, user });
-  } else {
-    res.status(200).json({ loggedIn: false });
+    if (profile) {
+      res.status(200).json({ loggedIn: true, profile });
+    } else {
+      res.status(200).json({ loggedIn: false });
+    }
+  }catch(error){
+    return res.status(400).json({message: error})
   }
 }
 

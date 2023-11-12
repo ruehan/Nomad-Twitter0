@@ -109,15 +109,18 @@ useEffect(() => {
     router.push(`/tweet/${e.target.id}`)
   }
 
-
   if (!data) return <div>Loading...</div>;
-  if (!tweets) return <div>Loading...</div>
-  if (!profiles) return <div>Loading...</div>;
 
+  console.log(data)
 
   if(data.loggedIn !== true){
     router.push('/log-in')
   }
+
+  if (!tweets) return <div>Loading...</div>
+  if (!profiles) return <div>Loading...</div>;
+  
+
 
   return (
     <>
