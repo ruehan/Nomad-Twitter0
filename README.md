@@ -1,4 +1,4 @@
-[Nomad-Twitter 링크](http://ruehan.com:3001, "nomad-twitter")
+## [Nomad-Twitter 링크](http://ruehan.com:3001, "nomad-twitter")
 
 ### 챌린지 이후 수정해야 할 것들
 - [ ] 회원가입 / 로그인 API 수정
